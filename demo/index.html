@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: Toolbox</title>
+  <script src="../blockly_compressed.js"></script>
+  <script src="../yaml_compressed.js"></script>
+  <script src="../blocks/tttool_lib_gen.js"></script>
+  <script src="../blocks_compressed.js"></script>
+  <script src="../tttool_lib_gen.js"></script>
+  <script src="../msg/js/en.js"></script>
+  <script src="../blocks/tttool_lib_blockdef.js"></script>
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+  <h1>tttool-blocks Demo</h1>
+
+  <p>
+    <button onclick="updateYaml()">Update yaml</button>
+    <button onclick="exportBlocks()">Export blocks to textarea</button>
+    <button onclick="importBlocks()">Import blocks to textarea</button>
+  </p>
+  
+  <div id="blocklyDiv" style="width: 800px; height: 480px; float: left;"></div>
+
+  <div><p>yaml code</p><textarea id="yamlcode" style="width: 500px; height: 290px;"></textarea></div>
+
+  <div><p>block code</p><textarea id="blockcode" style="width: 500px; height: 90px;"></textarea></div>
+
+  <xml id="toolbox" style="display: none">
+    <category name="tttool blocks">
+      <block type="tttool_product_header"></block>
+      <block type="tttool_script"></block>
+      <block type="tttool_play"></block>
+      <block type="tttool_speak"></block>
+      <block type="tttool_jump"></block>
+    </category>
+    <sep></sep>
+    <category name="Basic blocks">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="math_arithmetic"></block>
+      <block type="math_number">
+        <field name="NUM">42</field>
+      </block>
+    </category>
+    <sep></sep>
+    <category name="Variables" custom="VARIABLE">
+    </category>
+  </xml>
+
+  <script>
+    var demoWorkspace = Blockly.inject('blocklyDiv',
+        {media: '../media/',
+         toolbox: document.getElementById('toolbox')});
+
+    function updateYaml()
+    {
+      var code = Blockly.Yaml.workspaceToCode(demoWorkspace);
+
+      // Post-processing workaround (remove variable declaration)
+      if( code.startsWith("var") ) // remove unnecessary lines
+      {
+        var codelines = code.split('\n');
+        codelines.splice(0, 3);
+        code = codelines.join('\n');
+      }
+      
+      document.getElementById('yamlcode').value = code;
+    }
+
+    function exportBlocks()
+    {
+      var blockcode = Blockly.Xml.domToText( Blockly.Xml.workspaceToDom(demoWorkspace) );
+      document.getElementById('blockcode').value = blockcode;
+    }
+
+    function importBlocks()
+    {
+      Blockly.Xml.domToWorkspace( Blockly.Xml.textToDom( document.getElementById('blockcode').value ), demoWorkspace)
+    }
+  </script>
+
+</body>
+</html>
