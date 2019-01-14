@@ -56,7 +56,8 @@ speak:
 scriptcodes:
    tuer: 4716
    monster: 4717
-   haus: 4718```
+   haus: 4718
+```
 
 
 ## Links
